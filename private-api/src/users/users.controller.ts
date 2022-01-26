@@ -13,6 +13,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationHelper } from '../../libs/pagination-helper';
+import { QueryBuilder } from 'typeorm';
 
 @Controller('users')
 export class UsersController {
@@ -45,4 +46,10 @@ export class UsersController {
   async remove(@Param('id') id: number) {
     await this.usersService.remove(id);
   }
+
+  @Get(':userId/reports/most-consumed-nutrient')
+  mostConsumedNutrient(@Param('userId') userId: number){
+    return this.usersService.findMostConsumedNutrient(userId);
+  }
+  
 }
