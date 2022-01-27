@@ -10,15 +10,16 @@ describe('FoodsController', () => {
   let foodService: FoodsService
 
   beforeEach(async () => {
-    const FoodServiceProvider = { provide: FoodsService, 
+    const FoodServiceProvider = {
+      provide: FoodsService,
 
-      useFactory:() => ({
-        create: jest.fn(()=>[{}]),
-        findAll: jest.fn(()=>{return [{"id":167765,"description":"Watermelon, raw","publicationDate":"2019-04-01T00:00:00.000Z"}]}),
-        findOne: jest.fn(()=>{return {}}),
-        update: jest.fn(()=>{return {}}),
-        remove: jest.fn(()=>{}),
-      }) 
+      useFactory: () => ({
+        create: jest.fn(() => { return { "id": 167762, "description": "Strawberries, raw", "publicationDate": "2019-04-01T00:00:00.000Z" }; }),
+        findAll: jest.fn(() => { return [{ "id": 16776, "description": "Watermelon, raw", "publicationDate": "2019-04-01T00:00:00.000Z" }] }),
+        findOne: jest.fn(() => { return { "id": 167762, "description": "Strawberries, raw", "publicationDate": "2019-04-01T00:00:00.000Z" } }),
+        update: jest.fn(() => { return { "id": 167762, "description": "Strawberries, smoothie", "publicationDate": "2019-04-01T00:00:00.000Z" }; }),
+        remove: jest.fn(() => { return true}),
+      })
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -34,23 +35,28 @@ describe('FoodsController', () => {
   });
 
   it('calling create food method', () => {
-    const dto = new CreateFoodDto();
-    expect(foodController.create(dto)).not.toEqual(null);
+    //const dto = new CreateFoodDto();
+    //expect(foodController.create(dto)).not.toEqual(null);
+    expect(foodController.create({ "description": "Strawberries, raw", "publicationDate": "2019-04-01T00:00:00.000Z" }))
+      .toEqual({ "id": 167762, "description": "Strawberries, raw", "publicationDate": "2019-04-01T00:00:00.000Z" })
   });
-  
-  
+
+
   it('testing find by keyword', () => {
-    expect(foodController.findAll("WaterMelon, raw",1,10)).toEqual([{"id":167765,"description":"Watermelon, raw","publicationDate":"2019-04-01T00:00:00.000Z"}]);
+    expect(foodController.findAll("WaterMelon, raw", 1, 10))
+      .toEqual([{ "id": 16776, "description": "Watermelon, raw", "publicationDate": "2019-04-01T00:00:00.000Z" }]);
   });
 
   it('testing find by id', () => {
-    expect(typeof foodController.findOne(10)).toEqual("object");
+    expect(foodController.findOne(167762))
+      .toEqual({ "id": 167762, "description": "Strawberries, raw", "publicationDate": "2019-04-01T00:00:00.000Z" });
   });
 
-  it('testing update', () => {
-    const dto = new CreateFoodDto();
-    
-    expect(typeof foodController.update(11,dto)).toEqual("object");
+  it('testing update', async () => {
+    //const dto = new CreateFoodDto();
+
+    expect(await foodController.update(167762, { "description": "Strawberries, smoothie", "publicationDate": "2019-04-01T00:00:00.000Z" }))
+      .toEqual({ "id": 167762, "description": "Strawberries, smoothie", "publicationDate": "2019-04-01T00:00:00.000Z" });
   });
 
 
